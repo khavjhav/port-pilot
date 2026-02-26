@@ -20,7 +20,8 @@ class PortScanner {
 
   _scanWindows() {
     return new Promise((resolve) => {
-      const cmd = `powershell -NoProfile -Command "Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | ForEach-Object { $proc = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; [PSCustomObject]@{Port=$_.LocalPort; PID=$_.OwningProcess; Name=if($proc){$proc.ProcessName}else{'unknown'}; Path=if($proc){$proc.Path}else{''}} } | ConvertTo-Json -Compress"`;
+      // Use $(if(){}) subexpression — plain if() as hashtable value needs PS7+
+      const cmd = `powershell -NoProfile -Command "Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | ForEach-Object { $proc = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; [PSCustomObject]@{Port=$_.LocalPort; PID=$_.OwningProcess; Name=$(if($proc){$proc.ProcessName}else{'unknown'}); Path=$(if($proc){$proc.Path}else{''})} } | ConvertTo-Json -Compress"`;
 
       exec(cmd, { windowsHide: true, timeout: 15000 }, (err, stdout) => {
         if (err) return resolve([]);
