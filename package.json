@@ -1,0 +1,155 @@
+{
+  "name": "port-pilot",
+  "displayName": "Port Pilot — See, Open & Kill Ports",
+  "description": "Sidebar showing every listening port with process name, runtime detection, one-click open/copy/kill. Auto-refreshes. Zero config.",
+  "version": "1.0.0",
+  "publisher": "khavjhav",
+  "icon": "media/icon-128.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "port",
+    "ports",
+    "port manager",
+    "port kill",
+    "port viewer",
+    "process",
+    "localhost",
+    "network",
+    "developer tools",
+    "devtools",
+    "server",
+    "node",
+    "terminal"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/khavjhav/port-pilot"
+  },
+  "license": "MIT",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "port-pilot",
+          "title": "Port Pilot",
+          "icon": "media/port-pilot.svg"
+        }
+      ]
+    },
+    "views": {
+      "port-pilot": [
+        {
+          "id": "portPilot.portList",
+          "name": "Listening Ports"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Port Pilot",
+      "properties": {
+        "portPilot.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable Port Pilot"
+        },
+        "portPilot.refreshInterval": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 60,
+          "description": "Auto-refresh interval in seconds"
+        },
+        "portPilot.showNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notifications when ports go up or down"
+        },
+        "portPilot.ignorePorts": {
+          "type": "array",
+          "default": [],
+          "description": "Ports to hide from the panel"
+        },
+        "portPilot.ignoreSystemPorts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hide system ports (below 1024)"
+        },
+        "portPilot.groupBy": {
+          "type": "string",
+          "enum": [
+            "none",
+            "runtime"
+          ],
+          "default": "runtime",
+          "description": "Group ports by runtime type or show flat list"
+        },
+        "portPilot.showInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show active port count in status bar"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "portPilot.refresh",
+        "title": "Port Pilot: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "portPilot.openInBrowser",
+        "title": "Open in Browser",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "portPilot.copyUrl",
+        "title": "Copy URL"
+      },
+      {
+        "command": "portPilot.killProcess",
+        "title": "Kill Process",
+        "icon": "$(close)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "portPilot.refresh",
+          "when": "view == portPilot.portList",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "portPilot.openInBrowser",
+          "when": "view == portPilot.portList && viewItem == portEntry",
+          "group": "inline"
+        },
+        {
+          "command": "portPilot.killProcess",
+          "when": "view == portPilot.portList && viewItem == portEntry",
+          "group": "inline"
+        },
+        {
+          "command": "portPilot.copyUrl",
+          "when": "view == portPilot.portList && viewItem == portEntry"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^2.22.0"
+  }
+}
