@@ -63,6 +63,10 @@ class PortTreeProvider {
     return element;
   }
 
+  getParent() {
+    return null;
+  }
+
   /** Get current port count */
   get portCount() {
     return this._ports.length;

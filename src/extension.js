@@ -82,7 +82,7 @@ function activate(context) {
     }),
 
     vscode.commands.registerCommand("portPilot.focus", () => {
-      treeView.reveal(undefined, { focus: true });
+      vscode.commands.executeCommand("portPilot.portList.focus");
     }),
 
     vscode.commands.registerCommand("portPilot.openInBrowser", (item) => {
