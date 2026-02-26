@@ -6,6 +6,7 @@ const vscode = require("vscode");
 const { exec } = require("child_process");
 const PortScanner = require("./port-scanner");
 const PortTreeProvider = require("./port-tree-provider");
+// PortItem/PortGroupItem loaded via tree provider
 
 /** @param {vscode.ExtensionContext} context */
 function activate(context) {
@@ -24,7 +25,7 @@ function activate(context) {
   // ------------------------------------------------------------------
   const treeView = vscode.window.createTreeView("portPilot.portList", {
     treeDataProvider: treeProvider,
-    showCollapseAll: false,
+    showCollapseAll: true,
   });
   context.subscriptions.push(treeView);
 
@@ -45,7 +46,7 @@ function activate(context) {
     }
     const count = treeProvider.portCount;
     statusBar.text = `$(plug) ${count} port${count !== 1 ? "s" : ""}`;
-    statusBar.tooltip = `${count} listening port${count !== 1 ? "s" : ""} — click to view`;
+    statusBar.tooltip = `${count} dev server${count !== 1 ? "s" : ""} listening — click to view`;
     statusBar.show();
   }
 

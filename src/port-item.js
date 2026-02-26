@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Port TreeItem — represents a single port entry in the sidebar
+// Port TreeItems — group headers + individual port entries
 // ---------------------------------------------------------------------------
 const vscode = require("vscode");
 
@@ -14,6 +14,33 @@ const RUNTIME_ICONS = {
   webserver: new vscode.ThemeIcon("globe", new vscode.ThemeColor("charts.green")),
   other: new vscode.ThemeIcon("plug", new vscode.ThemeColor("foreground")),
 };
+
+const GROUP_ICONS = {
+  dev: new vscode.ThemeIcon("code", new vscode.ThemeColor("charts.green")),
+  apps: new vscode.ThemeIcon("window", new vscode.ThemeColor("charts.blue")),
+  system: new vscode.ThemeIcon("settings-gear", new vscode.ThemeColor("descriptionForeground")),
+};
+
+class PortGroupItem extends vscode.TreeItem {
+  /**
+   * @param {string} label
+   * @param {string} groupKey
+   * @param {number} count
+   * @param {boolean} expanded
+   */
+  constructor(label, groupKey, count, expanded) {
+    super(
+      label,
+      expanded
+        ? vscode.TreeItemCollapsibleState.Expanded
+        : vscode.TreeItemCollapsibleState.Collapsed
+    );
+    this.description = `${count}`;
+    this.iconPath = GROUP_ICONS[groupKey] || GROUP_ICONS.system;
+    this.contextValue = "portGroup";
+    this.groupKey = groupKey;
+  }
+}
 
 class PortItem extends vscode.TreeItem {
   /**
@@ -31,4 +58,4 @@ class PortItem extends vscode.TreeItem {
   }
 }
 
-module.exports = PortItem;
+module.exports = { PortItem, PortGroupItem };
